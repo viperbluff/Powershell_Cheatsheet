@@ -694,12 +694,12 @@ PowerView from powertools //recently moved to powersploit //
 			<rich_text> //download powerview folder
 • Import-Module .\powerview.psd1 // In the powerview folder , psd1 is the manifest file which loads all the modules and functions in current powershell session//
 • Get-Command -Module powerview
-• Get-NetDomainControllers //Get domain controllers for the current domain//
-• Get-NetComputers //Get all computers of the domain //
+• Get-NetDomainController //Get domain controllers for the current domain//
+• Get-NetComputer //Get all computers of the domain //
 • Get-NetUser //Get all users for the domain//
 • Get-NetUser –UserName Administrator //More details for the “Administrator” of the current domain //
 • Get-NetGroup //Get all the groups in a domain//
-• Get-NetFileServers  // Get all fileservers in domain//
+• Get-NetFileServer  // Get all fileservers in domain//
 • Get-NetLoggedon –Hostname &lt;servername&gt; // Get all the users logged in machine //
 
 
@@ -707,10 +707,9 @@ PowerView from powertools //recently moved to powersploit //
 • Invoke-UserHunter //Find computers where a domain admin is logged in//
 • Invoke-ShareFinder //Find shares on hosts in current domain//
 • Invoke-FileFinder //Find sensitive files on computers in the domain//
-• Invoke-FindLocalAdminAcces //Find all machines on the current domain where the current user has local admin access //
-• Invoke-FindVulnSystems 
+• FindLocalAdminAccess //Find all machines on the current domain where the current user has local admin access // 
 • Invoke-HostEnum –Hostname domainpc //Run all enumeration on a particular computer//
-• Invoke-EnumerateLocalAdmins //Find local admins on all machines of the domain//
+• Invoke-EnumerateLocalAdmin //Find local admins on all machines of the domain//
 
 </rich_text>
 			<rich_text foreground="#ffffa5a50000" weight="heavy">Keylogger </rich_text>
